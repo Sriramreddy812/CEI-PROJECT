@@ -44,7 +44,7 @@ https://cei-project-5wgbrbtcnaff4be8bl9nsh.streamlit.app/
 ├── models/
 │   └── model.pt      (Generated after training - not included)
 │
-├── screenshots/│
+├── screenshots/
 │   ├── predictions_changeDetection.png
 │   ├── upload_and_predictions.png
 │   └── heatmap.png
