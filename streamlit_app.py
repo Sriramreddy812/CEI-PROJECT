@@ -8,7 +8,8 @@ Requires the fine-tuned checkpoint (model.pt) from Notebook 3 to be
 placed next to this script, or update CHECKPOINT_PATH below. Once the
 checkpoint is in place, the app needs no internet connection to run.
 """
-
+import os
+import gdown
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -25,6 +26,16 @@ CLASS_NAMES = [
 ]
 
 CHECKPOINT_PATH = "models/model.pt"
+MODEL_URL = "https://drive.google.com/uc?id=1_R12bH2zMiAZGgKFSAxmLqVWzEFFQMz_"
+os.makedirs("models", exist_ok=True)
+
+if not os.path.exists(CHECKPOINT_PATH):
+    with st.spinner("Downloading trained model..."):
+        gdown.download(
+            MODEL_URL,
+            CHECKPOINT_PATH,
+            quiet=False
+        )
 
 # Similarity threshold chosen from the ROC curve in Notebook 4.
 # Update this value to match whatever threshold your own Notebook 4 run picked.
