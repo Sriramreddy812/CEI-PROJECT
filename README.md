@@ -1,80 +1,238 @@
-# Satellite Image Land-Use Classifier & Temporal Change Detector
+# 🛰️ Satellite Image Land-Use Classifier & Temporal Change Detector
 
-A computer vision project that classifies land-use types from satellite
-imagery and detects land-cover changes between two time periods, using
-transfer learning and embedding-based change detection.
+A deep learning project that classifies satellite land-use images and detects temporal land-cover changes using **transfer learning**, **embedding similarity**, and an interactive **Streamlit dashboard**.
 
-## Project Structure
+---
+
+## ✨ Features
+
+- 🌍 Land-use classification using a fine-tuned **ResNet18**
+- 🔄 Temporal change detection using **512-dimensional embeddings**
+- 📊 ROC-based cosine similarity threshold selection
+- 🔥 Pixel difference heatmap visualization
+- 📈 Baseline CNN vs Transfer Learning comparison
+- 🧪 Spatial leakage experiment
+- 📉 Error analysis on top-5 misclassified pairs
+- 🎛️ **Bonus Task B:** Multi-threshold detection mode (High Recall / Balanced / High Precision)
+
+---
+
+# 📂 Project Structure
+
+```text
+├── notebooks/
+│   ├── 01_Data_Pipeline.ipynb
+│   ├── 02_Baseline_CNN.ipynb
+│   ├── 03_Transfer_Learning.ipynb
+│   ├── 04_Temporal_Change_Detection.ipynb
+│   └── 05_Evaluation.ipynb
+│
+├── app/
+│   └── streamlit_app.py
+│
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# 📚 Datasets
+
+### EuroSAT
+- 27,000 RGB satellite images
+- 10 land-use classes
+- Automatically downloaded inside the notebooks using:
+
+```python
+torchvision.datasets.EuroSAT(download=True)
+```
+
+---
+
+### UC Merced Land Use
+
+- 2,100 RGB images
+- 21 land-use classes
+- Downloaded automatically in the evaluation notebooks.
+
+---
+
+# 🚀 Running the Notebooks
+
+All notebooks are designed for **Google Colab**.
+
+Run them **in order**:
+
+### 1️⃣ Data Pipeline
 
 ```
-notebooks/
-    01_Data_Pipeline.ipynb              - load EuroSAT, spatial block split
-    02_Baseline_CNN.ipynb               - scratch 3-layer CNN baseline
-    03_Transfer_Learning.ipynb          - two-phase ResNet18 fine-tuning + UC Merced eval
-    04_Temporal_Change_Detection.ipynb  - embeddings, cosine similarity, ROC curve
-    05_Evaluation.ipynb                 - spatial leakage experiment, error analysis
-
-app/
-    streamlit_app.py                    - geo-dashboard (classify + change detection)
-
-requirements.txt
-README.md
+01_Data_Pipeline.ipynb
 ```
 
-## Datasets
+- Dataset download
+- Class visualization
+- Spatial block split
 
-- **EuroSAT** (27,000 images, 10 classes) — downloaded automatically inside
-  the notebooks via `torchvision.datasets.EuroSAT(download=True)`.
-- **UC Merced Land Use** (2,100 images, 21 classes) — downloaded
-  automatically from the official host inside Notebooks 3 and 5.
+---
 
-## How to Run the Notebooks
+### 2️⃣ Baseline CNN
 
-All notebooks are written for Google Colab: open each one in Colab and use
-**Runtime → Run all**. No local files or paths are required — datasets
-download automatically.
+```
+02_Baseline_CNN.ipynb
+```
 
-Run them in order:
-1. `01_Data_Pipeline.ipynb`
-2. `02_Baseline_CNN.ipynb`
-3. `03_Transfer_Learning.ipynb` — saves `resnet18_landuse.pt` at the end.
-   **Download this file** (or save it to Google Drive) before your Colab
-   runtime disconnects, since later notebooks and the dashboard need it.
-4. `04_Temporal_Change_Detection.ipynb` — needs `resnet18_landuse.pt`
-   uploaded at the start if running in a fresh Colab session.
-5. `05_Evaluation.ipynb` — also needs `resnet18_landuse.pt` uploaded.
+- Scratch 3-layer CNN
+- Loss curves
+- Per-class F1
 
-## How to Run the Dashboard
+---
 
-The dashboard runs locally (not in Colab):
+### 3️⃣ Transfer Learning
 
-1. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-2. Place your `resnet18_landuse.pt` checkpoint (downloaded from Notebook 3)
-   in the `app/` folder, next to `streamlit_app.py`.
-3. Run:
-   ```
-   streamlit run app/streamlit_app.py
-   ```
-4. Upload a "before" and "after" tile to see the predicted land-use class
-   for each, their embedding similarity, and a change heatmap.
+```
+03_Transfer_Learning.ipynb
+```
 
-No internet connection is needed to run the dashboard itself once the
-checkpoint file is in place.
+- Two-phase ResNet18 fine-tuning
+- Frozen vs unfrozen comparison
+- UC Merced evaluation
 
-## Notes on Approximations
+At the end of this notebook, save:
 
-Two things in this project are approximated because the underlying data
-doesn't provide what the brief asks for directly:
+```
+model.pt
+```
 
-- **Spatial block split**: standard EuroSAT has no geographic coordinates,
-  so the "spatial block" split groups each class's images into contiguous
-  chunks (assumed to approximate nearby tiles) instead of shuffling
-  randomly.
-- **T1/T2 change simulation**: EuroSAT has no real before/after imagery, so
-  Notebook 4 simulates temporal pairs from contiguous per-class chunks, and
-  defines "changed" as a class change between the two tiles in a pair.
+This checkpoint is required for the dashboard and later notebooks.
 
-Both approximations are explained in detail in their respective notebooks.
+---
+
+### 4️⃣ Temporal Change Detection
+
+```
+04_Temporal_Change_Detection.ipynb
+```
+
+- Embedding extraction
+- Cosine similarity
+- ROC curve
+- Threshold selection
+- Change heatmaps
+
+---
+
+### 5️⃣ Evaluation
+
+```
+05_Evaluation.ipynb
+```
+
+Includes:
+
+- Spatial leakage experiment
+- UC Merced evaluation
+- Per-class metrics
+- Error analysis
+
+---
+
+# 💻 Running the Streamlit Dashboard
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Place the trained checkpoint
+
+```
+models/model.pt
+```
+
+inside the project.
+
+Launch the application
+
+```bash
+streamlit run streamlit_app.py
+```
+
+The dashboard provides:
+
+- Satellite image classification
+- Confidence scores
+- Top-3 predictions
+- Cosine similarity
+- Change detection
+- Pixel difference heatmap
+- **Bonus:** Multi-threshold detection mode
+
+---
+
+# 🎁 Bonus Task Implemented
+
+## ✅ Bonus B — Multi-threshold Toggle
+
+The dashboard allows switching between three operating modes:
+
+- High Recall
+- Balanced
+- High Precision
+
+Users can instantly observe how different cosine similarity thresholds affect change detection results.
+
+---
+
+# 📌 Notes
+
+Since the datasets are large, the following folders/files are **not included** in this repository:
+
+- `data/`
+- `assets/`
+- `models/model.pt`
+
+Please download the datasets by running the notebooks.
+
+Place the trained checkpoint (`model.pt`) inside the `models/` folder before launching the Streamlit dashboard.
+
+---
+
+# 📖 Project Approximations
+
+### Spatial Block Split
+
+EuroSAT does not provide geographic coordinates.
+
+To approximate spatial separation, each class is divided into contiguous blocks rather than random shuffling, reducing potential spatial leakage.
+
+---
+
+### Temporal Change Simulation
+
+EuroSAT does not contain true multi-temporal imagery.
+
+Notebook 4 therefore simulates T1/T2 image pairs by partitioning each class into contiguous subsets and defining changes using paired class assignments.
+
+These approximations are fully documented inside the notebooks.
+
+---
+
+# 🛠️ Technologies Used
+
+- Python
+- PyTorch
+- Torchvision
+- Streamlit
+- NumPy
+- Matplotlib
+- Scikit-learn
+- Google Colab
+
+---
+
+# 📌 Repository Note
+
+Large datasets and trained model checkpoints are intentionally excluded from the repository due to GitHub file size limits.
+
+Running the notebooks automatically downloads the required datasets, while the trained model checkpoint should be generated from **Notebook 3** or placed manually inside the `models/` directory.
