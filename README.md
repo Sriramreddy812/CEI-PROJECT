@@ -245,4 +245,10 @@ The following files are **not included** in this repository due to GitHub size l
 
 Datasets are downloaded automatically by running the notebooks.
 
+---
+
+## 📄 Project Report
+
+👉 **[View the Project Report (PDF)](./Project_Report.pdf)**
+
 The trained checkpoint (`models/model.pt`) is generated after completing **Notebook 3** and is automatically downloaded by the deployed Streamlit application from Google Drive if it is not present locally.
